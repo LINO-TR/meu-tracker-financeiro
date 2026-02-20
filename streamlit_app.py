@@ -104,7 +104,7 @@ st.header("3️⃣ Fluxo Institucional")
 c1, c2 = st.columns(2)
 with c1:
     st.info("💡 **DICA:** DXY caindo e Juros caindo = Caminho livre para o BTC.")
-    st.link_button("📊 Ver Fluxo de ETFs (Farside)", "https://farside.co.uk/bitcoin-etf-flows/")
+    st.link_button("📊 Ver Fluxo de ETFs (Farside)", "https://farside.co.uk/btc/")
     st.link_button("🐋 Whale Alert (Grandes Movimentações)", "https://whale-alert.io/")
 
 with c2:
