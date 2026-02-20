@@ -20,42 +20,40 @@ st.header("1️⃣ Monitor de Preços")
 col1, col2, col3, col4 = st.columns(4)
 
 def get_data():
-    # Tickers: DXY, Juros 10Y, BTC, ETH
-    tickers = {
-        "DXY": "DX-Y.NYB", 
-        "US10Y": "^TNX", 
-        "BTC": "BTC-USD", 
-        "ETH": "ETH-USD"
-    }
-    data = yf.download(list(tickers.values()), period="2d")['Close']
-    return data
+    tickers_list = ["DX-Y.NYB", "^TNX", "BTC-USD", "ETH-USD"]
+    # Tenta baixar o dado mais recente (último minuto)
+    data = yf.download(tickers_list, period="1d", interval="1m")
+    
+    if data.empty or len(data) < 1:
+        # Se falhar, tenta o histórico de 2 dias como plano B
+        data = yf.download(tickers_list, period="2d")
+    
+    # Limpeza: remove valores vazios e pega a última linha
+    return data['Close'].ffill().iloc[-1]
 
 try:
     prices = get_data()
     
     with col1:
-        val = prices["DX-Y.NYB"].iloc[-1]
-        delta = val - prices["DX-Y.NYB"].iloc[-2]
-        st.metric("DXY (Dólar)", f"{val:.2f}", f"{delta:.2f}")
+        # Usamos .get() para evitar erro se o ticker sumir
+        val = prices.get("DX-Y.NYB", 0)
+        st.metric("DXY (Dólar)", f"{val:.2f}" if val > 0 else "Carregando...")
 
     with col2:
-        val = prices["^TNX"].iloc[-1]
-        delta = val - prices["^TNX"].iloc[-2]
-        st.metric("US10Y (Juros)", f"{val:.2f}%", f"{delta:.2f}")
+        val = prices.get("^TNX", 0)
+        st.metric("US10Y (Juros)", f"{val:.2f}%" if val > 0 else "Carregando...")
 
     with col3:
-        val = prices["BTC-USD"].iloc[-1]
-        delta = val - prices["BTC-USD"].iloc[-2]
-        st.metric("Bitcoin", f"${val:,.0f}", f"{delta:,.0f}")
+        val = prices.get("BTC-USD", 0)
+        st.metric("Bitcoin", f"${val:,.0f}" if val > 0 else "Carregando...")
 
     with col4:
-        val = prices["ETH-USD"].iloc[-1]
-        delta = val - prices["ETH-USD"].iloc[-2]
-        st.metric("Ethereum", f"${val:,.2f}")
-except:
-    st.error("Erro ao carregar dados do Yahoo Finance. Tente atualizar.")
-
-st.markdown("---")
+        val = prices.get("ETH-USD", 0)
+        st.metric("Ethereum", f"${val:,.2f}" if val > 0 else "Carregando...")
+        
+except Exception as e:
+    st.error(f"Aguardando conexão com mercado... ({e})")
+    
 
 # --- DASHBOARD 2: GRÁFICOS DO TRADINGVIEW ---
 st.header("2️⃣ Gráficos em Tempo Real")
