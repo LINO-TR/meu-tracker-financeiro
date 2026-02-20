@@ -108,7 +108,7 @@ with c1:
     st.link_button("🐋 Whale Alert (Grandes Movimentações)", "https://whale-alert.io/")
 
 with c2:
-    st.link_button("🔗 CryptoQuant (Netflow)", "https://cryptoquant.com/asset/btc/chart/exchange-flows/netflow")
+    st.link_button("🔗 CryptoQuant (Netflow)", "https://cryptoquant.com/asset/btc/chart/exchange-flows/exchange-netflow-total?exchange=all_exchange&window=DAY&sma=0&ema=0&priceScale=log&metricScale=linear&chartStyle=column")
     st.link_button("🌡️ Mapa de Liquidação", "https://www.coinglass.com/pro/futures/LiquidationHeatMap")
 
 # --- BARRA LATERAL (Checklist) ---
